@@ -1,0 +1,71 @@
+<section class="card">
+  <h1>{{ codigoEditando() ? 'Editar ' + codigoEditando() : 'Nueva incidencia' }}</h1>
+  <p class="sub">Completa los datos. Todos los campos son obligatorios.</p>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="field">
+      <label for="titulo">Título</label>
+      <input id="titulo" type="text" formControlName="titulo" placeholder="Ej: Falla de red en Lab 04" />
+      @if (campoInvalido('titulo')) {
+        <small class="error">
+          @if (form.controls.titulo.errors?.['required']) { El título es obligatorio. }
+          @else if (form.controls.titulo.errors?.['minlength']) { Mínimo 5 caracteres. }
+          @else { Máximo 80 caracteres. }
+        </small>
+      }
+    </div>
+
+        <div class="field">
+      <label for="descripcion">
+        Descripción técnica
+        <span class="contador">{{ form.controls.descripcion.value.length }}/500</span>
+      </label>
+      <textarea id="descripcion" rows="4" formControlName="descripcion" placeholder="Describe el problema con detalle..."></textarea>
+      @if (campoInvalido('descripcion')) {
+        <small class="error">
+          @if (form.controls.descripcion.errors?.['required']) { La descripción es obligatoria. }
+          @else if (form.controls.descripcion.errors?.['minlength']) { Mínimo 10 caracteres. }
+          @else { Máximo 500 caracteres. }
+        </small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="responsable">Responsable (técnico asignado)</label>
+      <input id="responsable" type="text" formControlName="responsable" placeholder="Nombre del técnico" />
+      @if (campoInvalido('responsable')) {
+        <small class="error">
+          @if (form.controls.responsable.errors?.['required']) { El responsable es obligatorio. }
+          @else { Mínimo 3 caracteres. }
+        </small>
+      }
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="prioridad">Prioridad</label>
+        <select id="prioridad" formControlName="prioridad">
+          <option>Alta</option>
+          <option>Media</option>
+          <option>Baja</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="estado">Estado</label>
+        <select id="estado" formControlName="estado">
+          <option>Pendiente</option>
+          <option>En proceso</option>
+          <option>Resuelta</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a routerLink="/" class="btn ghost">Cancelar</a>
+      <button type="submit" class="btn primary">
+        {{ codigoEditando() ? 'Guardar cambios' : 'Registrar incidencia' }}
+      </button>
+    </div>
+  </form>
+</section>

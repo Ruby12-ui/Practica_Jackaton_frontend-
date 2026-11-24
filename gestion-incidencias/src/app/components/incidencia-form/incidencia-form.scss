@@ -1,0 +1,52 @@
+.card {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 0 60px rgba(139, 92, 246, 0.12);
+  h1 {
+    margin: 0;
+    background: var(--gradient-cool);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub { color: var(--text-muted); margin: 6px 0 24px; }
+}
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; flex: 1; }
+.row { display: flex; gap: 16px; flex-wrap: wrap; }
+label { font-size: 0.85rem; color: var(--text-muted); }
+input, textarea, select {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  &:focus {
+    outline: none;
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  }
+  &.ng-invalid.ng-touched { border-color: var(--alta); }
+}
+.error { color: var(--alta); font-size: 0.8rem; }
+.actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+.btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 22px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  color: #fff;
+  &.ghost { background: var(--surface-2); color: var(--text); }
+  &.primary { background: var(--gradient); box-shadow: 0 6px 24px rgba(139, 92, 246, 0.35); }
+}
+
+label { display: flex; justify-content: space-between; }
+.contador { color: var(--blue); font-size: 0.75rem; }

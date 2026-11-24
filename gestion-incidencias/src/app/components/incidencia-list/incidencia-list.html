@@ -1,0 +1,120 @@
+<section class="head">
+  <div>
+    <h1>Panel de Incidencias</h1>
+    <p class="sub">{{ ordenadas().length }} registro(s) encontrados</p>
+  </div>
+  <div class="head-actions">
+    <button class="btn ghost" (click)="exportarCSV()">⬇ Exportar CSV</button>
+    <a routerLink="/nueva" class="btn primary">+ Nueva incidencia</a>
+  </div>
+</section>
+
+<section class="stats">
+  <button class="stat total" (click)="limpiarFiltros()">
+    <span class="num">{{ stats().total }}</span>
+    <span class="lbl">Total</span>
+  </button>
+  <button class="stat pend" (click)="filtrarEstado('Pendiente')">
+    <span class="num">{{ stats().pendientes }}</span>
+    <span class="lbl">Pendientes</span>
+  </button>
+  <button class="stat proc" (click)="filtrarEstado('En proceso')">
+    <span class="num">{{ stats().proceso }}</span>
+    <span class="lbl">En proceso</span>
+  </button>
+  <button class="stat res" (click)="filtrarEstado('Resuelta')">
+    <span class="num">{{ stats().resueltas }}</span>
+    <span class="lbl">Resueltas</span>
+  </button>
+  <button class="stat alta" (click)="filtrarAlta()">
+    <span class="num">{{ stats().alta }}</span>
+    <span class="lbl">Alta prioridad abiertas</span>
+  </button>
+</section>
+
+<section class="filters">
+  <input
+    type="text"
+    placeholder="Buscar por título..."
+    [ngModel]="busqueda()"
+    (ngModelChange)="setBusqueda($event)" />
+
+  <select [ngModel]="prioridad()" (ngModelChange)="setPrioridad($event)">
+    <option value="">Prioridad: Todas</option>
+    <option>Alta</option>
+    <option>Media</option>
+    <option>Baja</option>
+  </select>
+
+  <select [ngModel]="estado()" (ngModelChange)="setEstado($event)">
+    <option value="">Estado: Todos</option>
+    <option>Pendiente</option>
+    <option>En proceso</option>
+    <option>Resuelta</option>
+  </select>
+
+  @if (hayFiltros()) {
+    <button class="btn ghost small" (click)="limpiarFiltros()">✕ Limpiar filtros</button>
+  }
+</section>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="sortable" (click)="ordenar('codigo')">Código {{ flecha('codigo') }}</th>
+        <th class="sortable" (click)="ordenar('titulo')">Título {{ flecha('titulo') }}</th>
+        <th>Responsable</th>
+        <th class="sortable" (click)="ordenar('prioridad')">Prioridad {{ flecha('prioridad') }}</th>
+        <th class="sortable" (click)="ordenar('estado')">Estado {{ flecha('estado') }}</th>
+        <th class="sortable" (click)="ordenar('fecha')">Fecha {{ flecha('fecha') }}</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (i of visibles(); track i.codigo) {
+        <tr>
+          <td class="codigo">{{ i.codigo }}</td>
+          <td>{{ i.titulo }}</td>
+          <td>{{ i.responsable }}</td>
+          <td><span [class]="'badge p-' + i.prioridad.toLowerCase()">{{ i.prioridad }}</span></td>
+          <td>
+            <select
+              [class]="'estado-select ' + claseEstado(i.estado)"
+              [ngModel]="i.estado"
+              (ngModelChange)="cambiarEstado(i, $event)">
+              <option>Pendiente</option>
+              <option>En proceso</option>
+              <option>Resuelta</option>
+            </select>
+          </td>
+          <td>{{ i.fecha | date: 'dd/MM/yyyy' }}</td>
+          <td>
+  <div class="acciones">
+    <a [routerLink]="['/detalle', i.codigo]">Ver</a>
+    <a [routerLink]="['/editar', i.codigo]">Editar</a>
+    <button (click)="pedirEliminar(i)">Eliminar</button>
+  </div>
+</td>
+        </tr>
+      } @empty {
+        <tr><td colspan="7" class="vacio">No hay incidencias que coincidan.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (totalPaginas() > 1) {
+  <div class="paginacion">
+    <button class="btn ghost small" (click)="irA(paginaActual() - 1)" [disabled]="paginaActual() === 1">← Anterior</button>
+    <span>Página {{ paginaActual() }} de {{ totalPaginas() }}</span>
+    <button class="btn ghost small" (click)="irA(paginaActual() + 1)" [disabled]="paginaActual() === totalPaginas()">Siguiente →</button>
+  </div>
+}
+
+@if (porEliminar(); as inc) {
+  <app-confirm-dialog
+    [mensaje]="'Se eliminará ' + inc.codigo + ' — ' + inc.titulo + '. Esta acción no se puede deshacer.'"
+    (confirmar)="confirmarEliminar()"
+    (cancelar)="porEliminar.set(null)" />
+}

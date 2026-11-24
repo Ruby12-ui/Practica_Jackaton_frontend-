@@ -1,0 +1,10 @@
+<div class="overlay" (click)="cancelar.emit()">
+  <div class="dialog" (click)="$event.stopPropagation()">
+    <h3>¿Eliminar incidencia?</h3>
+    <p>{{ mensaje() }}</p>
+    <div class="actions">
+      <button class="btn ghost" (click)="cancelar.emit()">Cancelar</button>
+      <button class="btn danger" (click)="confirmar.emit()">Sí, eliminar</button>
+    </div>
+  </div>
+</div>
